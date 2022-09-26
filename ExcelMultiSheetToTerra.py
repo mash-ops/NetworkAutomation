@@ -1,4 +1,4 @@
-#!/opt/rh/rh-python36/root/bin/python3
+#!env python3
 #Parse Excel file with multiple sheets and convert to terraform format
 #Author : Manjesh.munegowda@sap.com
 #Date : Oct-04-2019
@@ -17,13 +17,14 @@
 #
 #Mar-09-2020: New Requirement: add azurerm_network_security_rule" = (E through N on NSG tab)
 #
-import argparse                                                                            #Required for handling command line arguments
-import pandas as pd                                                                        #Required for processing Excel file
-import time                                                                                #Required for getting time 
-import pathlib                                                                             #Required for finding path
-import os                                                                                  #Required for finding the basename 
-import sys                                                                                 #Required for redirecting stdout to file
-import difflib                                                                             #Required for checking the difference between two files
+import argparse                                                                      #Required for handling command line arguments
+import pandas as pd                                                                  #Required for processing Excel file
+import time                                                                          #Required for getting time 
+import pathlib                                                                       #Required for finding path
+import os                                                                            #Required for finding the basename 
+import sys                                                                           #Required for redirecting stdout to file
+import difflib                                                                       #Required for checking the difference between two files
+import numpy as nump                                                                 #As of 2022 pandas deprecated numpy
 startTime=time.time()
 global bkp
 bkp=''
@@ -132,7 +133,8 @@ for h, (index, row) in enumerate(df0.iterrows()):
 # Resource Group
 #
 #below to getrid of NaN
-df1['resource group'].replace(' ', pd.np.nan, inplace=True)
+#df1['resource group'].replace(' ', pd.np.nan, inplace=True)
+df1['resource group'].replace(' ', nump.nan, inplace=True)
 df1.dropna(subset=['resource group'], inplace=True)
 df1=df1.fillna('')
 print("\n\n#Input to create the ResouceGroups" )
@@ -156,7 +158,8 @@ print("{}".format(csq))
 # Vnet Mapping
 #
 #below to getrid of NaN
-df2['resource group'].replace(' ', pd.np.nan, inplace=True)
+#df2['resource group'].replace(' ', pd.np.nan, inplace=True)
+df2['resource group'].replace(' ', nump.nan, inplace=True)
 df2.dropna(subset=['resource group'], inplace=True)
 df2=df2.fillna('')
 print("\n\n#Input to create the VirtualNetworks" )
@@ -180,8 +183,9 @@ subnetCols= [ col for col in df3.columns if 'subnet' in col ]                   
 #Below filter is to get the count of variable number of subnet columns, this will add a count field to end of the DataFrame, count is used to check the last column, in below while loop
 df3['count'] = df3.filter(regex="^subnet").count(axis=1)
 df3.applymap(str)                                                                 #make everything a string
-df3['vnet name'].replace(' ', pd.np.nan, inplace=True)                            #Replace whitespace to NaN, in Vnet name column
-df3.replace(' ', pd.np.nan, inplace=True)                                         #Replace whitespace to NaN, in all data 
+#df3['vnet name'].replace(' ', pd.np.nan, inplace=True)                            #Replace whitespace to NaN, in Vnet name column
+df3['vnet name'].replace(' ', nump.nan, inplace=True)                            #Replace whitespace to NaN, in Vnet name column
+df3.replace(' ', nump.nan, inplace=True)                                         #Replace whitespace to NaN, in all data 
 df3.dropna(subset=['vnet name'], inplace=True)                                    #If Vnet Name has Nan, drop the row
 #print (df3)
 
@@ -223,7 +227,8 @@ print(" {}".format(ccrl))
 #subnet vnet mapping
 #
 #below to getrid of NaN
-df4['vnet name'].replace(' ', pd.np.nan, inplace=True)
+#df4['vnet name'].replace(' ', pd.np.nan, inplace=True)
+df4['vnet name'].replace(' ', nump.nan, inplace=True)
 df4.dropna(subset=['vnet name'], inplace=True)
 df4=df4.fillna('')
 print("\n\n#Input to create the subnets" )
@@ -241,7 +246,8 @@ print("]" )
 #Public Ip addresses
 #
 #below to getrid of NaN
-df5['public ip name'].replace(' ', pd.np.nan, inplace=True)
+#df5['public ip name'].replace(' ', pd.np.nan, inplace=True)
+df5['public ip name'].replace(' ', nump.nan, inplace=True)
 df5.dropna(subset=['public ip name'], inplace=True)
 df5=df5.fillna('')
 print("\n\n#Input to create the public ip address" )
@@ -258,7 +264,8 @@ print("]" )
 #Network Security groups (NSG)
 #
 #below to getrid of NaN
-df6['nsg-name'].replace(' ', pd.np.nan, inplace=True)
+#df6['nsg-name'].replace(' ', pd.np.nan, inplace=True)
+df6['nsg-name'].replace(' ', nump.nan, inplace=True)
 df6.dropna(subset=['nsg-name'], inplace=True)
 df6=df6.fillna('')
 print("\n\n#Input to create the NSG" )
@@ -295,7 +302,8 @@ print("]" )
 #UDR Route tables
 #
 #below to getrid of NaN
-df7['rg_name'].replace(' ', pd.np.nan, inplace=True)
+#df7['rg_name'].replace(' ', pd.np.nan, inplace=True)
+df7['rg_name'].replace(' ', nump.nan, inplace=True)
 df7.dropna(subset=['rg_name'], inplace=True)
 df7=df7.fillna('')
 print("\n\n#Input to create UDR Route tables" )
